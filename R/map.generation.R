@@ -543,6 +543,11 @@ db_connection(db, oracle.user, oracle.password, oracle.dbname)
     recaptures <- fetch(recaptures)
     recaptures <- recaptures %>% filter(TAG_ID %in% releases$TAG_ID)
 
+    if(!all.releases){
+      releases <- releases %>% filter(TAG_ID %in% recaptures$TAG_ID)
+    }
+    }
+
     if(nrow(recaptures)==0){
       if(all.releases){warning("Warning! There are no recaptures for the chosen dataset", immediate. = T)
       recaptures[1,]=NA
@@ -554,11 +559,6 @@ db_connection(db, oracle.user, oracle.password, oracle.dbname)
       recaptures <- dbSendQuery(con, "SELECT * FROM LBT_RECAPTURES WHERE 1= 0")
       recaptures <- fetch(recaptures)
       recaptures[1,]=NA
-    }
-
-    if(!all.releases){
-      releases <- releases %>% filter(TAG_ID %in% recaptures$TAG_ID)
-      }
     }
 
   ##create a few more useful filtering variables
